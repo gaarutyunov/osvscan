@@ -7,6 +7,7 @@ toolchain go1.24.11
 require (
 	github.com/golangci/golangci-lint/v2 v2.7.2
 	github.com/google/osv-scanner/v2 v2.1.0
+	github.com/ossf/osv-schema/bindings/go v0.0.0-20250701001340-180f03cc6901
 	golang.org/x/tools v0.39.0
 )
 
@@ -98,7 +99,6 @@ require (
 	github.com/opencontainers/image-spec v1.1.1 // indirect
 	github.com/opencontainers/runtime-spec v1.2.1 // indirect
 	github.com/opencontainers/selinux v1.12.0 // indirect
-	github.com/ossf/osv-schema/bindings/go v0.0.0-20250701001340-180f03cc6901 // indirect
 	github.com/owenrumney/go-sarif/v3 v3.2.0 // indirect
 	github.com/package-url/packageurl-go v0.1.3 // indirect
 	github.com/pandatix/go-cvss v0.6.2 // indirect

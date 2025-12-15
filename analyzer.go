@@ -5,6 +5,7 @@ import (
 	"go/token"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/google/osv-scanner/v2/pkg/models"
@@ -145,9 +146,9 @@ func reportVulnerabilities(pass *analysis.Pass, vulnResult models.VulnerabilityR
 	}
 }
 
-func shouldIgnoreVulnerability(vuln *osvschema.Vulnerability, settings *Settings) bool {
+func shouldIgnoreVulnerability(vuln osvschema.Vulnerability, settings *Settings) bool {
 	for _, ignored := range settings.IgnoreVulns {
-		if vuln.GetId() == ignored {
+		if vuln.ID == ignored {
 			return true
 		}
 	}
@@ -162,33 +163,41 @@ func shouldIgnoreVulnerability(vuln *osvschema.Vulnerability, settings *Settings
 	return false
 }
 
-func getVulnerabilitySeverity(vuln *osvschema.Vulnerability) float64 {
-	if len(vuln.Severity) > 0 {
-		for _, sev := range vuln.Severity {
-			if sev.Type == osvschema.SeverityType_SEVERITY_TYPE_CVSS_V3 {
-				return sev.Score
-			}
+func getVulnerabilitySeverity(vuln osvschema.Vulnerability) float64 {
+	for _, sev := range vuln.Severity {
+		if sev.Type == osvschema.SeverityCVSSV3 {
+			return parseCVSSScore(sev.Score)
 		}
 	}
 	return 0.0
 }
 
-func formatVulnerabilityMessage(vuln *osvschema.Vulnerability, pkg models.PackageVulns) string {
+func parseCVSSScore(cvssVector string) float64 {
+	// CVSS vector format: "CVSS:3.1/AV:N/AC:L/..." or just a score like "7.5"
+	// Try to parse as a direct score first
+	if score, err := strconv.ParseFloat(cvssVector, 64); err == nil {
+		return score
+	}
+	// For full CVSS vectors, we'd need to calculate the score
+	// For now, return 0 if we can't parse it
+	return 0.0
+}
+
+func formatVulnerabilityMessage(vuln osvschema.Vulnerability, pkg models.PackageVulns) string {
 	severity := "UNKNOWN"
-	if len(vuln.Severity) > 0 {
-		for _, sev := range vuln.Severity {
-			if sev.Type == osvschema.SeverityType_SEVERITY_TYPE_CVSS_V3 {
-				if sev.Score >= 9.0 {
-					severity = "CRITICAL"
-				} else if sev.Score >= 7.0 {
-					severity = "HIGH"
-				} else if sev.Score >= 4.0 {
-					severity = "MEDIUM"
-				} else {
-					severity = "LOW"
-				}
-				break
+	for _, sev := range vuln.Severity {
+		if sev.Type == osvschema.SeverityCVSSV3 {
+			score := parseCVSSScore(sev.Score)
+			if score >= 9.0 {
+				severity = "CRITICAL"
+			} else if score >= 7.0 {
+				severity = "HIGH"
+			} else if score >= 4.0 {
+				severity = "MEDIUM"
+			} else if score > 0 {
+				severity = "LOW"
 			}
+			break
 		}
 	}
 
@@ -199,7 +208,7 @@ func formatVulnerabilityMessage(vuln *osvschema.Vulnerability, pkg models.Packag
 
 	return fmt.Sprintf("[%s] %s in %s@%s: %s",
 		severity,
-		vuln.GetId(),
+		vuln.ID,
 		pkg.Package.Name,
 		pkg.Package.Version,
 		summary,

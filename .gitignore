@@ -1,0 +1,29 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+/cmd/osvscan/osvscan
+
+# Test binary
+*.test
+
+# Coverage
+*.out
+*.prof
+
+# Go workspace
+go.work
+go.work.sum
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db

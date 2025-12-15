@@ -1,15 +1,15 @@
 # osvscan
 
-[![CI](https://github.com/garutyunov/osvscan/actions/workflows/ci.yml/badge.svg)](https://github.com/garutyunov/osvscan/actions/workflows/ci.yml)
-[![Go Report Card](https://goreportcard.com/badge/github.com/garutyunov/osvscan)](https://goreportcard.com/report/github.com/garutyunov/osvscan)
-[![Go Reference](https://pkg.go.dev/badge/github.com/garutyunov/osvscan.svg)](https://pkg.go.dev/github.com/garutyunov/osvscan)
+[![CI](https://github.com/gaarutyunov/osvscan/actions/workflows/ci.yml/badge.svg)](https://github.com/gaarutyunov/osvscan/actions/workflows/ci.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/gaarutyunov/osvscan)](https://goreportcard.com/report/github.com/gaarutyunov/osvscan)
+[![Go Reference](https://pkg.go.dev/badge/github.com/gaarutyunov/osvscan.svg)](https://pkg.go.dev/github.com/gaarutyunov/osvscan)
 
 A go/analysis linter that scans Go module dependencies for known vulnerabilities using [osv-scanner](https://github.com/google/osv-scanner).
 
 ## Installation
 
 ```bash
-go install github.com/garutyunov/osvscan/cmd/osvscan@latest
+go install github.com/gaarutyunov/osvscan/cmd/osvscan@latest
 ```
 
 ## Usage
@@ -45,7 +45,7 @@ package main
 
 import (
     "golang.org/x/tools/go/analysis/singlechecker"
-    "github.com/garutyunov/osvscan"
+    "github.com/gaarutyunov/osvscan"
 )
 
 func main() {

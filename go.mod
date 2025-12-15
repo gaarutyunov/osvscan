@@ -1,4 +1,4 @@
-module github.com/garutyunov/osvscan
+module github.com/gaarutyunov/osvscan
 
 go 1.24
 
